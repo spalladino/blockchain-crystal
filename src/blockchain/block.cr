@@ -1,6 +1,6 @@
 require "./transaction"
 
-class Blockchain::Crystal::Block
+class Blockchain::Block
   # See https://en.bitcoin.it/wiki/Protocol_documentation#Block_Headers
   class Header
     getter version : Int32

@@ -1,6 +1,6 @@
 require "./spec_helper"
 
-describe Blockchain::Crystal::Block do
+describe Blockchain::Block do
   it "reads a block header" do
     block = block_125552
     block.version.should eq(1)

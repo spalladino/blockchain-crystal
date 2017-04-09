@@ -8,7 +8,7 @@ Add this to your application's `shard.yml`:
 
 ```yaml
 dependencies:
-  blockchain-crystal:
+  blockchain:
     github: spalladino/blockchain-crystal
 ```
 

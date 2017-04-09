@@ -1,4 +1,4 @@
-class Blockchain::Crystal::Transaction
+class Blockchain::Transaction
   class Outpoint
     getter hash : Bytes
     getter index : UInt32
