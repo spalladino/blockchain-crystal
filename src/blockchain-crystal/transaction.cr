@@ -4,8 +4,7 @@ class Blockchain::Crystal::Transaction
     getter index : UInt32
 
     def initialize(io : IO)
-      @hash = Bytes.new(32)
-      io.read(hash)
+      @hash = io.read_hash
       @index = io.read_bytes(UInt32, IO::ByteFormat::LittleEndian)
     end
   end
@@ -38,9 +37,11 @@ class Blockchain::Crystal::Transaction
   getter output_count : UInt64
   getter outputs : Array(Output)
   getter lock_time : UInt32
+  getter hash : Bytes
 
   # See https://en.bitcoin.it/wiki/Protocol_documentation#tx
-  def initialize(io : IO)
+  def initialize(base_io : IO)
+    io = OpenSSL::DigestIO.new(base_io, "SHA256")
     @version = io.read_bytes(Int32, IO::ByteFormat::LittleEndian)
 
     @input_count = io.read_var_int
@@ -52,5 +53,6 @@ class Blockchain::Crystal::Transaction
     @output_count.times { @outputs << Output.new(io) }
 
     @lock_time = io.read_bytes(UInt32, IO::ByteFormat::LittleEndian)
+    @hash = OpenSSL::Digest.new("SHA256").update(io.digest).digest.reverse!
   end
 end

@@ -20,4 +20,11 @@ module IO
     read(slice)
     slice
   end
+
+  def read_hash
+    slice = Bytes.new(32)
+    read(slice)
+    slice.reverse!
+    slice
+  end
 end
