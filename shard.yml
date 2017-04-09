@@ -1,0 +1,9 @@
+name: blockchain-crystal
+version: 0.1.0
+
+authors:
+  - Santiago Palladino <spalladino@gmail.com>
+
+crystal: 0.20.5
+
+license: MIT
