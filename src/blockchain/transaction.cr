@@ -53,6 +53,6 @@ class Blockchain::Transaction
     @output_count.times { @outputs << Output.new(io) }
 
     @lock_time = io.read_bytes(UInt32, IO::ByteFormat::LittleEndian)
-    @hash = OpenSSL::Digest.new("SHA256").update(io.digest).digest.reverse!
+    @hash = OpenSSL::Digest.new("SHA256").update(io.digest).digest
   end
 end

@@ -7,3 +7,13 @@ def block_125552
   io = IO::Memory.new(bytes, false)
   Blockchain::Block.new(io)
 end
+
+class Blockchain::Block
+  class Header
+    setter hash_merkle_root : Bytes
+  end
+
+  def hash_merkle_root=(slice)
+    @header.hash_merkle_root = slice
+  end
+end

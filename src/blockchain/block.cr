@@ -19,7 +19,7 @@ class Blockchain::Block
       @timestamp = io.read_bytes(UInt32, IO::ByteFormat::LittleEndian)
       @bits = io.read_bytes(UInt32, IO::ByteFormat::LittleEndian)
       @nonce = io.read_bytes(UInt32, IO::ByteFormat::LittleEndian)
-      @hash = OpenSSL::Digest.new("SHA256").update(io.digest).digest.reverse!
+      @hash = OpenSSL::Digest.new("SHA256").update(io.digest).digest
     end
   end
 
@@ -34,5 +34,12 @@ class Blockchain::Block
     @transaction_count = io.read_var_int
     @transactions = Array(Transaction).new(transaction_count)
     @transaction_count.times { @transactions << Transaction.new(io) }
+  end
+
+  def validate_merkle_root!
+    calculated = Blockchain::Merkle.calculate_root(@transactions.map(&.hash))
+    if calculated != hash_merkle_root
+      raise "Invalid merkle root: calculated #{calculated.hexstring}, expected #{hash_merkle_root.hexstring}"
+    end
   end
 end
