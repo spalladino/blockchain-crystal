@@ -34,8 +34,8 @@ describe Blockchain::Block do
 
     signature_data_1 = "30440220771ae3ed7f2507f5682d6f63f59fa17187f1c4bdb33aa96373e73d42795d23b702206545376155d36db49560cf9c959d009f8e8ea668d93f47a4c8e9b27dc6b3302301".hexbytes
     signature_data_2 = "048a976a8aa3f805749bf62df59168e49c163abafde1d2b596d685985807a221cbddf5fb72687678c41e35de46db82b49a48a2b9accea3648407c9ce2430724829".hexbytes
-    expected_signature_sript = [signature_data_1.size] + signature_data_1.to_a + [signature_data_2.size] + signature_data_2.to_a
-    transaction.inputs[0].signature_script.to_a.should eq(expected_signature_sript)
+    expected_signature_script = [signature_data_1.size] + signature_data_1.to_a + [signature_data_2.size] + signature_data_2.to_a
+    transaction.inputs[0].signature_script.to_a.should eq(expected_signature_script)
     transaction.inputs[0].sequence.should eq(4294967295)
     transaction.outputs.size.should eq(1)
     transaction.outputs[0].value.should eq(15000000)

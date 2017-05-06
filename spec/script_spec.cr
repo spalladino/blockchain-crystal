@@ -61,4 +61,41 @@ describe Script::Interpreter do
     result = run([255])
     result.should be_a(Script::Error)
   end
+
+  it "should run a bitcoin pay-to-pubkey-hash transaction check" do
+    signature_data_1 = "30440220771ae3ed7f2507f5682d6f63f59fa17187f1c4bdb33aa96373e73d42795d23b702206545376155d36db49560cf9c959d009f8e8ea668d93f47a4c8e9b27dc6b3302301".hexbytes
+    signature_data_2 = "048a976a8aa3f805749bf62df59168e49c163abafde1d2b596d685985807a221cbddf5fb72687678c41e35de46db82b49a48a2b9accea3648407c9ce2430724829".hexbytes
+    signature_script = [signature_data_1.size] + signature_data_1.to_a + [signature_data_2.size] + signature_data_2.to_a
+    pk_data = "0d46f6edc4ac26b62f4f7527e59b5379bde18450".hexbytes.to_a
+    pk_script = ([Script::Opcode::OP_DUP, Script::Opcode::OP_HASH160, pk_data.size] + pk_data + [Script::Opcode::OP_EQUALVERIFY, Script::Opcode::OP_CHECKSIG]).map(&.to_u8)
+    script = signature_script + pk_script
+
+    run(script).should eq(true)
+  end
+
+  it "should fail a bitcoin pay-to-pubkey-hash transaction check due to invalid hash" do
+    signature_data_1 = "30440220771ae3ed7f2507f5682d6f63f59fa17187f1c4bdb33aa96373e73d42795d23b702206545376155d36db49560cf9c959d009f8e8ea668d93f47a4c8e9b27dc6b3302301".hexbytes
+    signature_data_2 = "048a976a8aa3f805749bf62df59168e49c163abafde1d2b596d685985807a221cbddf5fb72687678c41e35de46db82b49a48a2b9accea3648407c9ce2430724829".hexbytes
+    signature_script = [signature_data_1.size] + signature_data_1.to_a + [signature_data_2.size] + signature_data_2.to_a
+    pk_data = "0000f6edc4ac26b62f4f7527e59b5379bde18450".hexbytes.to_a
+    pk_script = ([Script::Opcode::OP_DUP, Script::Opcode::OP_HASH160, pk_data.size] + pk_data + [Script::Opcode::OP_EQUALVERIFY, Script::Opcode::OP_CHECKSIG]).map(&.to_u8)
+    script = signature_script + pk_script
+
+    result = run(script)
+    result.should be_a(Script::Error)
+    result.as(Script::Error).cause.should eq(Script::Error::Cause::InvalidTransaction)
+  end
+
+  pending "should fail a bitcoin pay-to-pubkey-hash transaction check due to invalid signature" do
+    signature_data_1 = "00000220771ae3ed7f2507f5682d6f63f59fa17187f1c4bdb33aa96373e73d42795d23b702206545376155d36db49560cf9c959d009f8e8ea668d93f47a4c8e9b27dc6b3302301".hexbytes
+    signature_data_2 = "048a976a8aa3f805749bf62df59168e49c163abafde1d2b596d685985807a221cbddf5fb72687678c41e35de46db82b49a48a2b9accea3648407c9ce2430724829".hexbytes
+    signature_script = [signature_data_1.size] + signature_data_1.to_a + [signature_data_2.size] + signature_data_2.to_a
+    pk_data = "0d46f6edc4ac26b62f4f7527e59b5379bde18450".hexbytes.to_a
+    pk_script = ([Script::Opcode::OP_DUP, Script::Opcode::OP_HASH160, pk_data.size] + pk_data + [Script::Opcode::OP_EQUALVERIFY, Script::Opcode::OP_CHECKSIG]).map(&.to_u8)
+    script = signature_script + pk_script
+
+    result = run(script)
+    result.should be_a(Script::Error)
+    result.as(Script::Error).cause.should eq(Script::Error::Cause::InvalidTransaction)
+  end
 end
