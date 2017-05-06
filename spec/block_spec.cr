@@ -41,7 +41,7 @@ describe Blockchain::Block do
     transaction.outputs[0].value.should eq(15000000)
 
     pk_data = "e43f7c61b3ef143b0fe4461c7d26f67377fd2075".hexbytes.to_a
-    expected_pk_script = ([Opcode::OP_DUP, Opcode::OP_HASH160, pk_data.size] + pk_data + [Opcode::OP_EQUALVERIFY, Opcode::OP_CHECKSIG]).map(&.to_u8)
+    expected_pk_script = ([Script::Opcode::OP_DUP, Script::Opcode::OP_HASH160, pk_data.size] + pk_data + [Script::Opcode::OP_EQUALVERIFY, Script::Opcode::OP_CHECKSIG]).map(&.to_u8)
     transaction.outputs[0].pk_script.to_a.should eq(expected_pk_script)
   end
 
